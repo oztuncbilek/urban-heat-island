@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-This project focuses on the detection and analysis of Urban Heat Islands (UHIs) in Hamburg, Germany. UHIs are a critical environmental challenge where metropolitan areas experience higher temperatures than surrounding rural regions due to human activities and changes in land cover. [cite: 1] This phenomenon leads to increased energy consumption, air pollution, and heat-related health issues, making its study crucial for sustainable urban planning. 
+This project focuses on the detection and analysis of Urban Heat Islands (UHIs) in Hamburg, Germany. UHIs are a critical environmental challenge where metropolitan areas experience higher temperatures than surrounding rural regions due to human activities and changes in land cover. This phenomenon leads to increased energy consumption, air pollution, and heat-related health issues, making its study crucial for sustainable urban planning. 
 
-The core of this project is to leverage multi-source data, including satellite imagery and vector data, with advanced deep learning techniques (specifically U-Net architectures) for high-resolution UHI mapping and analysis. [cite: 18, 26] The study aims to understand the evolution of UHI intensity, its correlation with urban morphology and vegetation, and to develop a predictive model for future UHI patterns.
+The core of this project is to leverage multi-source data, including satellite imagery and vector data, with advanced deep learning techniques (specifically U-Net architectures) for high-resolution UHI mapping and analysis. The study aims to understand the evolution of UHI intensity, its correlation with urban morphology and vegetation, and to develop a predictive model for future UHI patterns.
 
 **Author:** Ozan Tuncbilek
 
@@ -53,7 +53,8 @@ The project employs a multi-faceted approach:
 1.  How has Hamburg's Urban Heat Island (UHI) intensity evolved from 2014 to 2024 during peak summer months, based on high-resolution satellite-derived LST data and urban morphological trends? 
 2.  What is the spatial and statistical correlation between vegetation degradation measured via NDVI decline and surface temperature increases in high-risk urban districts, as derived from multi-source geospatial data? 
 3.  Can a lightweight semantic segmentation model (e.g., U-Net), trained on fused LST, NDVI, and OSM-derived features, achieve over 90% accuracy in detecting UHI zones in near-real-time scenarios? 
-4.  How effective is a deep learning-based geospatial pipeline in forecasting Urban Heat Island distribution by 2030 under ongoing urbanization and vegetation loss trends, with a case study on Hamburg? 
+4.  How effective is a deep learning-based geospatial pipeline in forecasting Urban Heat Island distribution by 2030 under ongoing urbanization and vegetation loss trends, with a case study on Hamburg?
+
 ## Technology Stack
 
 * **Programming Language:** Python
@@ -68,8 +69,7 @@ The project employs a multi-faceted approach:
 
 ## Getting Started
 
-(To be filled in with instructions on how to set up the environment, download data, and run the notebooks/scripts.)
-
+To be filled ...
 ## Timeline Overview
 
 The project is planned over approximately 2.5 months, divided into the following phases:
@@ -81,7 +81,6 @@ The project is planned over approximately 2.5 months, divided into the following
 6.  **Real-Time Inference** (Week 8) 
 7.  **Visualization & Deployment** (Weeks 9-10) 
 
-Refer to Table 1 in the project document for detailed tasks and deliverables for each phase. 
 
 ## Future Enhancements
 
@@ -89,10 +88,25 @@ Refer to Table 1 in the project document for detailed tasks and deliverables for
 * Extend the study to multiple cities. 
 * Integrate additional environmental variables. 
 
-## Contributing
-
-(Details on how others can contribute to the project, if applicable.)
 
 ## License
 
-(Specify the license under which this project is shared, e.g., MIT, Apache 2.0. This is important for open-source projects.)
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
