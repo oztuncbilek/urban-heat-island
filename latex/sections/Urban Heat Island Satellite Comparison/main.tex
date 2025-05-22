@@ -1,0 +1,135 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[a4paper, margin=2.5cm]{geometry} % Sayfa boyutu ve kenar boşluklarını tanımlar
+\usepackage{ragged2e} % \RaggedRight için
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{cite}
+% \usepackage{needspace} % Bir başka seçenek olabilirdi
+
+\begin{document}
+
+\begin{minipage}{\textwidth} % Başlık ve tabloyu bir arada tutmak için minipage başlat
+\noindent
+\textbf{Satellite Comparison for Urban Heat Island (UHI) Analysis - Hamburg Case Study}
+
+\medskip % \bigskip'tan \medskip'e düşürülerek boşluk azaltıldı
+
+\noindent
+{\small % Tablo için küçük font boyutu
+% Satır yüksekliğini biraz azaltmak gerekirse burada ayarlanabilir:
+% \renewcommand{\arraystretch}{0.95} % Örnek: satır yüksekliğini hafifçe azaltır
+\begin{tabularx}{\textwidth}{| l | >{\RaggedRight\arraybackslash}X | >{\RaggedRight\arraybackslash}X | >{\RaggedRight\arraybackslash}X | >{\RaggedRight\arraybackslash}X |}
+\hline
+\textbf{Feature} & \textbf{Landsat 8} & \textbf{Landsat 9} & \textbf{Sentinel-2 (A/B)} & \textbf{MODIS (on Terra/Aqua)} \\
+\hline
+Launch Date(s) & Feb 11, 2013 & Sep 27, 2021 & Jun 23, 2015 (A) \newline Mar 7, 2017 (B) & Dec 18, 1999 (Terra) \newline May 4, 2002 (Aqua) \\
+\hline
+Expected Lifespan & 5 years (Design life, operations ongoing) & 5 years (Design life, operations ongoing) & 7.5 years each (Design life, operations ongoing) & Terra: 6 years, Aqua: 6 years (Design life, operations ongoing)$^{10}$ \\
+\hline
+Operator/Agency & NASA / USGS & NASA / USGS & ESA (Copernicus) & NASA \\
+\hline
+Primary Sensor(s) & OLI (Operational Land Imager) \newline TIRS (Thermal Infrared Sensor) & OLI-2 \newline TIRS-2 & MSI (MultiSpectral Instrument) & MODIS (Moderate Resolution Imaging Spectroradiometer) \\
+\hline
+Spatial Resolution & \textbf{OLI:} 30m (VNIR$^1$, SWIR$^2$), 15m (Pan$^3$) \newline \textbf{TIRS:} 100m (delivered resampled to 30m) & \textbf{OLI-2:} 30m (VNIR$^1$, SWIR$^2$), 15m (Pan$^3$) \newline \textbf{TIRS-2:} 100m (delivered resampled to 30m) & \textbf{MSI:} 10m (Vis$^4$, NIR$^5$), 20m (Red Edge, SWIR$^2$), 60m (Coastal, Atmosphere) & \textbf{MODIS:} 250m (Red, NIR$^5$), 500m (Blue, Green, SWIR$^2$), 1km (TIR$^6$ \& others) \\
+\hline
+Thermal Bands (TIR$^6$) & \textbf{Yes} (2 Bands, $\sim$10.6 - 12.5 $\mu$m) & \textbf{Yes} (2 Bands, $\sim$10.6 - 12.5 $\mu$m) & \textbf{No} & \textbf{Yes} (Multiple Bands, $\sim$3.7 - 14.4 $\mu$m) \\
+\hline
+Temporal Resolution & 16 days & 16 days \newline (8 days combined with Landsat 8) & $\sim$5 days (Constellation at mid-latitudes) & 1-2 days (global coverage) \\
+\hline
+Swath Width & 185 km & 185 km & 290 km & 2330 km \\
+\hline
+% İngilizce'ye çevrilmiş ve güncellenmiş satır
+Acquisition Time (Local) & $\sim$10:00 AM (Desc.) & $\sim$10:00 AM (Desc.) & $\sim$10:30 AM (Desc.) & \textbf{Terra:} $\sim$10:30 AM (Desc.) \newline \textbf{Aqua:} $\sim$1:30 PM (Asc.) \\
+\hline
+Bands/Sensor for LST$^7$ & \textbf{TIRS:} Band 10, Band 11 & \textbf{TIRS-2:} Band 10, Band 11 & \textbf{None} (No thermal sensor) & \textbf{MODIS:} Typically Bands 31 \& 32 (used in standard LST products), others available \\
+\hline
+Bands/Sensor for NDVI$^8$ & \textbf{OLI:} Band 5 (NIR$^5$) \& Band 4 (Red) & \textbf{OLI-2:} Band 5 (NIR$^5$) \& Band 4 (Red) & \textbf{MSI:} Band 8 (NIR$^5$, 10m) \& Band 4 (Red, 10m) & \textbf{MODIS:} Band 2 (NIR$^5$, 250m) \& Band 1 (Red, 250m) \\
+\hline
+Key Strengths for UHI & - Direct LST measurement \newline - Good spatial res. for features & - Direct LST measurement \newline - Improved revisit with L8 \newline - Data continuity & - High spatial/temporal res. for \textbf{land cover mapping} \newline - Useful for correlating land cover with LST & - High temporal res. for dynamics \newline - Good TIR bands for LST algorithms \\
+\hline
+Key Weaknesses for UHI & - Moderate temporal res. & - Moderate temporal res. & - \textbf{Cannot measure LST directly} & - Coarse spatial res. (esp. TIR) for intra-urban detail \\
+\hline
+Data Access & Free (e.g., USGS EarthExplorer, GEE$^9$)\cite{landsatUSGS,gee} & Free (e.g., USGS EarthExplorer, GEE$^9$)\cite{landsatUSGS,gee} & Free (e.g., Copernicus Hub, GEE$^9$)\cite{sentinelESA,gee} & Free (e.g., LAADS DAAC, GEE$^9$)\cite{modisNASA,gee} \\
+\hline
+\end{tabularx}
+% Satır yüksekliği değiştirildiyse burada geri alınır:
+% \renewcommand{\arraystretch}{1.0} % Varsayılana veya önceki değere geri dön
+} % \small biter
+\end{minipage} % minipage biter
+
+\bigskip % Bu, tablodan sonraydı
+
+\noindent \footnotesize
+$^1$ VNIR: Visible and Near Infrared \\
+$^2$ SWIR: Shortwave Infrared \\
+$^3$ Pan: Panchromatic \\
+$^4$ Vis: Visible Spectrum (Blue, Green, Red bands) \\
+$^5$ NIR: Near Infrared \\
+$^6$ TIR: Thermal Infrared ($\mu$m = micrometer) \\
+$^7$ LST: Land Surface Temperature. Calculation often requires TIR bands. Emissivity estimation might use VNIR/SWIR. \\
+$^8$ NDVI: Normalized Difference Vegetation Index = (NIR - Red) / (NIR + Red). Requires specific Red and NIR bands. \\
+$^9$ GEE: Google Earth Engine \\
+$^{10}$ As of April 2025, Terra (launched Dec 1999) has operated for over 25 years and Aqua (launched May 2002) for nearly 23 years, significantly exceeding their 6-year design lives.
+
+\bigskip
+
+\noindent \textbf{Land Surface Temperature (LST) Calculation Details}
+
+\medskip
+
+Land Surface Temperature (LST) is a critical parameter for Urban Heat Island (UHI) analysis. Its retrieval from satellite data typically relies on thermal infrared (TIR) measurements. The specific bands and algorithms used vary depending on the sensor capabilities:
+
+\vspace{1em}
+
+\noindent \textbf{Landsat 8 \& 9}
+\newline
+Landsat 8 and 9 are key sources for LST due to their dedicated Thermal Infrared Sensor (TIRS/TIRS-2)\cite{landsatUSGS}.
+\begin{itemize}
+    \item \textbf{Bands Used:} LST is primarily derived from the Top of Atmosphere (TOA) radiance measured in TIRS/TIRS-2 Bands 10 ($\sim$10.6-11.2 $\mu$m) and 11 ($\sim$11.5-12.5 $\mu$m)\cite{landsatUSGS}. Band 11 has known stray light issues, so Band 10 is often preferred for single-channel methods, or specific corrections are applied in split-window algorithms.
+    \item \textbf{Algorithms:} Common algorithms for LST retrieval include:
+    \begin{itemize}
+        \item \textit{Single-Channel Algorithm:} Requires atmospheric profiles (water vapor, air temperature) as input, in addition to TOA radiance and surface emissivity\cite{landsatLST}.
+        \item \textit{Split-Window Algorithm:} Uses measurements from both thermal bands (10 and 11). This method helps account for atmospheric effects without requiring explicit atmospheric profiles, but is sensitive to accurate surface emissivity and the quality of both thermal bands\cite{landsatLST}.
+        \item \textit{Radiative Transfer Model-based methods:} More complex methods simulating atmospheric effects.
+    \end{itemize}
+    Surface emissivity, a crucial input for all algorithms, is typically estimated from other bands (VNIR/SWIR) based on land cover type, vegetation indices (like NDVI), or built-up indices\cite{landsatLST}.
+\end{itemize}
+
+\vspace{1em}
+
+\noindent \textbf{Sentinel-2 (A/B)}
+\newline
+\textbf{Sentinel-2 satellites DO NOT carry a thermal infrared sensor.}\cite{sentinelESA}
+\begin{itemize}
+    \item \textbf{Direct LST Measurement:} It is \textbf{not possible} to directly calculate LST from Sentinel-2 data alone because it lacks the necessary thermal bands.
+    \item \textbf{Role in UHI Analysis:} Despite the lack of thermal bands, Sentinel-2 is invaluable for UHI studies primarily through its high spatial resolution multispectral data\cite{sentinelESA}. These bands (10m, 20m) are excellent for:
+    \begin{itemize}
+        \item Detailed mapping and classification of urban land cover, including impervious surfaces, vegetation, and water bodies, which are key factors influencing LST.
+        \item Deriving indices (like NDVI, NDWI, NDBI) that correlate with surface properties affecting temperature and are used for emissivity estimation.
+    \end{itemize}
+    Sentinel-2 data is often used in conjunction with thermal data from other sources (like Landsat, MODIS, or ground measurements) to relate high-resolution land cover information to LST patterns.
+\end{itemize}
+
+\vspace{1em}
+
+\noindent \textbf{MODIS (on Terra/Aqua)}
+\newline
+MODIS provides frequent thermal observations suitable for monitoring LST dynamics at a coarser resolution\cite{modisNASA}.
+\begin{itemize}
+    \item \textbf{Bands Used:} MODIS has multiple TIR bands. Standard LST products (e.g., MOD11\_L2, MYD11\_L2) primarily utilize Bands 31 ($\sim$10.78-11.28 $\mu$m) and 32 ($\sim$11.77-12.27 $\mu$m)\cite{modisNASA}. Other thermal bands can also be used in specific algorithms.
+    \item \textbf{Algorithms:} The standard MODIS LST products are generated using robust algorithms, primarily the generalized Split-Window algorithm\cite{modisLST}. This algorithm accounts for atmospheric effects (water vapor) and surface emissivity using the two thermal bands.
+    Advanced algorithms might incorporate more bands or auxiliary atmospheric data.
+    \item \textbf{Products:} NASA provides readily available, atmospherically corrected, and emissivity-adjusted LST products (Level 2, Level 3) at various temporal resolutions (daily, 8-day composite), making MODIS a convenient source for LST time series analysis, especially at regional scales\cite{modisNASA}.
+\end{itemize}
+
+\vfill
+
+\bibliographystyle{plain}
+\bibliography{ref} % ref.bib dosyanızın adının bu olduğunu varsayıyorum
+
+\end{document}
