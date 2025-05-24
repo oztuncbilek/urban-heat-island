@@ -1,0 +1,475 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{pmboxdraw}
+\usepackage{caption}
+\usepackage[backend=biber, style=authoryear, sorting=nyt]{biblatex}
+\addbibresource{references.bib}
+\usepackage{hyperref}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  escapeinside={(*}{*)},
+  literate={├}{|}1 {─}{-}1 {└}{+}1 {│}{!}1
+}
+
+
+\title{Urban Heat Island Detection and Analysis \\ Hamburg Case Study}
+\author{Ozan Tuncbilek}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Urban Heat Islands (UHIs) represent one of the most critical environmental challenges of modern urbanization, where metropolitan areas experience elevated temperatures compared to surrounding rural regions due to human activities and land cover changes. This phenomenon increases energy consumption, air pollution, and heat-related mortality, making it a priority for sustainable urban planning. \parencite{Voogt2003}.  
+
+Furthermore, this temperature difference is mainly caused by the replacement of natural land surfaces (like vegetation and soil) with artificial materials (such as concrete, asphalt, and buildings) common in city environments \parencite{rff_uhi101_2025}. 
+
+% --- Comment: Added LULC impact on UHI ---
+The formation and intensity of UHIs are intrinsically linked to the Land Use/Land Cover (LULC) composition of urban environments. Areas dominated by impervious surfaces, such as concrete and asphalt typical of dense built-up areas, exhibit higher Land Surface Temperatures (LST) due to their thermal properties of absorption and retention \parencite{LULC_Impact_BuiltUp}. In contrast, vegetated surfaces, including urban parks, forests, and green corridors, exert a cooling influence primarily through evapotranspiration and shading, thus playing a crucial role in UHI mitigation \parencite{LULC_Impact_Vegetation}. Similarly, water bodies are recognized for their temperature-moderating effects \parencite{LULC_Impact_Water}. The prevalence and characteristics of bare soil also influence local thermal conditions. Therefore, a detailed understanding of the spatial distribution and temporal dynamics of these LULC classes is fundamental for accurately assessing UHI and formulating effective urban planning strategies.
+
+A key parameter for understanding and monitoring UHIs is Land Surface Temperature (LST), which represents the radiative temperature of the ground itself and is often derived from satellite remote sensing data \parencite{nasa_uhi_part1_2025}. The increasing impact of urban heat islands, particularly within the context of a warming global climate, presents a significant challenge to the sustainability and livability of cities worldwide \parencite{planetlabs_lst_uhi_2025}. Understanding the complex interplay of factors contributing to UHI formation is therefore essential for developing effective strategies both to lessen the effect (mitigation) and to adjust to its impacts (adaptation) \parencite{ucar_uhi_2025}.
+
+Specifically, further investigation is required into how urban spatial structure – the physical layout and form of the city, including aspects like how concentrated development is (centrality) versus how spread out it is (dispersion) – and the rate of urban growth influence the intensity of the UHI effect \parencite{nasa_uhi_day2_2025}. Determining the periods of most extreme heat in specific urban locations, such as the city of Hamburg, necessitates detailed analysis of historical LST datasets \parencite{ncbi_mekelle_uhi_2025}.
+
+% --- Comment: Begin added rationale for semantic segmentation---
+However, simple LST thresholding can flag hot pixels but fails to consider contextual factors such as built infrastructure, vegetation patterns, and surface heterogeneity, often resulting in misclassified or noisy UHI maps. Additionally, LST derived from sources like Landsat and MODIS often has a spatial resolution of 100 meters, which is insufficient for detecting small-scale UHI phenomena in dense urban settings. In contrast, this study aims for a spatial resolution closer to 10 meters to capture fine-grained UHI variation across urban subregions \parencite{planetlabs_lst_uhi_2025}.
+
+% Added: Semantic segmentation rationale
+To address this, we propose a semantic segmentation approach using U-Net architectures that fuse multi-source data:
+\begin{itemize}
+  \item \textbf{Thermal bands} (LST) from Landsat 8/9, MODIS;
+  \item \textbf{Spectral indices} (e.g., NDVI) from Sentinel-2;
+  \item \textbf{Vector layers} (buildings, roads, parks) from OpenStreetMap (OSM) snapshots for 2015 and 2025.
+\end{itemize}
+This fusion enables context-aware UHI mapping and change-detection over 2014–2024, and lays the groundwork for real-time inference and 2030 forecasting \parencite{Ariza2018, Na_2023}.
+
+
+\vspace{0.5cm}
+\textbf{Hamburg as a Case Study:}  
+Hamburg, Germany's second-largest city, faces unique UHI risks due to its dense urban core, industrial zones, and proximity to water bodies. While the Elbe River moderates temperatures locally, areas like HafenCity and Wilhelmsburg exhibit intense heat accumulation, as identified in preliminary satellite analyses. The city's 2030 Climate Plan emphasizes green infrastructure expansion, yet lacks granular UHI monitoring tools—a gap this study aims to fill. %two-phase approach 
+To address this, a two-phase approach is proposed: initially, a lightweight U-Net model will be deployed to perform near-real-time segmentation of UHI patterns based on recent satellite imagery, delivering up-to-date thermal risk maps to urban planners. Subsequently, using the ten-year historical data generated through segmentation, time-series analysis techniques will be explored to forecast UHI evolution toward 2030, providing a data-driven foundation for long-term mitigation strategies.
+
+\vspace{0.5cm}
+\textbf{Scientific and Economic Contributions:}  
+\begin{itemize}
+    \item \textbf{Novel Methodology:} We integrate multi-sensor satellite data (Landsat 8/9, Sentinel-2, MODIS) with a U-Net deep learning architecture to map UHIs at unprecedented resolution (10 m/pixel), improving upon traditional NDVI-LST regression models.
+    \item \textbf{Policy Impact:} Our temporal analysis (2016–2021) identifies hotspots for targeted greening, directly informing Hamburg's Urban Development Senate.
+    \item \textbf{Commercial Potential:} The proposed SaaS platform could reduce urban cooling costs by 15\%–20\% for city planners, as estimated by analogous projects in Rotterdam \parencite{Ariza2018}.
+\end{itemize}
+
+% --- Comment: Adding one new research question---
+\textbf{Research Questions:}  
+\begin{enumerate}
+    \item How has Hamburg's Urban Heat Island (UHI) intensity evolved from 2014 to 2024 during peak summer months, based on high-resolution satellite-derived LST data and urban morphological trends?  
+    \item What is the spatial and statistical correlation between vegetation degradation—measured via NDVI decline—and surface temperature increases in high-risk urban districts, as derived from multi-source geospatial data?  
+    \item Can a lightweight semantic segmentation model (e.g., U-Net), trained on fused LST, NDVI, and OSM-derived features, achieve over 90\% accuracy in detecting UHI zones in near-real-time scenarios?  
+    \item How effective is a deep learning-based geospatial pipeline in forecasting Urban Heat Island distribution by 2030 under ongoing urbanization and vegetation loss trends, with a case study on Hamburg?  
+\end{enumerate}
+
+
+This study advances UHI research by bridging remote sensing and scalable AI tools, offering both academic insights and deployable solutions for climate-resilient cities.
+
+
+\section{State of the Art}
+Recent studies have demonstrated that thermal remote sensing and deep learning methodologies such as deep semantic segmentation networks (U-Net, DeepLabv3+, SegFormer) for land-cover mapping provide robust tools for mapping UHI effects \parencite{Lin_2024}. Existing literature illustrates that the combination of thermal band analysis, vegetation indices, vector sources (e.g., OSM), and segmentation networks enables precise representation of urban heat islands. Incorporating local vegetation data further refines these models, ultimately informing urban development strategies with a high degree of spatial and temporal resolution. While advanced computational methods underlie the analysis, my approach will emphasize transparent, reproducible procedures throughout the research.
+
+\clearpage
+
+\section{Related Works}
+
+This section presents a review of key studies related to the detection and analysis of UHI effects, focusing on their findings and methodologies,followed by a discussion on how our approach builds upon and extends the existing body of work.
+
+\subsection{Review of Existing Studies}
+
+\begin{itemize}
+    \item \textbf{Voogt \& Oke (2003):} "{Thermal remote sensing of urban climates}" - This paper reviews thermal remote sensing for mapping urban surface temperatures (SUHI), distinguishing it from atmospheric temperatures (AUHI) \parencite{Voogt2003}. Their work established the critical role of these techniques in urban climate studies.
+
+    \textbf{Methodology:} The paper reviews various approaches and methodologies that utilize thermal remote sensing data in urban climate research. It discusses the distinction between the atmospheric urban heat island (AUHI) and the surface urban heat island (SUHI), emphasizing how remote sensing primarily captures. The authors also touch upon the use of Landsat imagery for mapping sub-pixel impervious surfaces and evaluating thermal infrared imagery to understand the spatial and temporal dynamics of UHI.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Rizwan et al. (2007):} "{A Review on the Generation, Determination and Mitigation of Urban Heat Island}" - This work provides a comprehensive literature review on UHI generation causes (material properties, anthropogenic heat, reduced evapotranspiration), determination methods, and mitigation strategies \parencite{Rizwan_2007}. It offers a valuable synthesis of the UHI knowledge up to 2007.
+
+    \textbf{Methodology:} The paper synthesizes a wide body of existing literature on UHI. It categorizes the factors influencing UHI into controllable and uncontrollable, temporary, permanent, and cyclic effects. The review also examines different techniques used to determine UHI, including ground-based measurements and remote sensing approaches. Furthermore, it discusses various mitigation strategies, such as the use of high albedo materials, cool roofs, vegetation, and optimized urban design.
+
+    \vspace{0.3cm}
+    %useful paper for our project 
+    \item \textbf{Attarhay Tehrani et al. (2024):} "{Predicting Urban Heat Island in European Cities: A Comparative Study of GRU, DNN, and ANN Models Using Urban Morphological Variables}" -  This study compares deep learning models (GRU, DNN, ANN) using 3D urban morphological variables and environmental data to predict UHI intensity in 69 European cities, projecting impacts to 2080 \parencite{Tehrani_2024}. It underscores the need for customized planning based on urban form and weather.
+
+    \textbf{Methodology:} The researchers employed a deep learning approach, combining high-resolution 3D urban models with environmental data. They used urban morphological variables as input features for the GRU, DNN, and ANN models. The performance of these models in predicting UHI intensity was then compared. The study also generated projections for future UHI impacts under different scenarios.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Lin (2024):} "{Urban Heat Island Distribution Observation by Integrating Remote Sensing Technology and Deep Learning}" - This research integrates remote sensing with an optimized Support Vector Machine (SVM) using Particle Swarm Optimization (PSO) for observing UHI distribution in Xi'an, China, reporting high accuracy \parencite{Lin_2024}.
+
+    \textbf{Methodology:} The research integrates remote sensing data with a deep learning approach using SVM to capture urban surface temperatures. The novelty lies in the optimization of the SVM model's parameters using the particle swarm optimization algorithm. This optimized model was then applied to observe the spatial distribution of the urban heat island in Xi'an, China. The study also conducts a contribution study on the selected parameters used in the model.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Nayak et al. (2023):} "{Spatial Characteristics and Temporal Trend of Urban Heat Island Effect over Major Cities in India Using Long-Term Space-Based MODIS Land Surface Temperature Observations (2000–2023)}" - Analyzing 23 years (2000-2023) of MODIS LST data for major Indian cities, this study reveals significant rising temperature trends, particularly a more pronounced and consistent nighttime SUHI \parencite{Nayak_2023}.
+
+    \textbf{Methodology:} The study utilizes space-based MODIS land surface temperature data collected over 23 years (2000–2023). It applies a linear fit analysis to determine the temporal trends in surface temperatures across major Indian cities. The research also analyzes the spatial characteristics of SUHI during different seasons and times of the day.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Ren \& Ghaffar (2023):} "{Multi-Sensor Remote Sensing and AI-Driven Analysis for Coastal and Urban Resilience Classification}" - This paper proposes using LSTM networks with multi-sensor remote sensing data fusion to classify urban and coastal resilience levels, relevant for assessing urban response to heat stress \parencite{Ren_2023}.
+
+    \textbf{Methodology:} The methodology involves a multi-step deep learning pipeline, including data preprocessing, feature extraction, class balancing using SMOTE, and classification using LSTM networks. The study utilizes temporal ocean physics data from the Copernicus Marine Data Service and other remote sensing datasets to enhance the accuracy of resilience assessments.
+
+    \vspace{0.3cm}
+    
+    \item \textbf{Campos et al. (2023):} "{Land Surface Temperature in an Arid City: Assessing Spatio-temporal Changes}" - Assessing LST in an arid Argentinian city, this study uniquely identifies an urban *cold* island (UCI) phenomenon influenced by vegetation, built-up areas, and bare soil \parencite{Campos_2023}.
+
+    \textbf{Methodology:} The researchers selected points in the urban and rural areas of the Tulum Valley and obtained LST data for cold and warm periods of several years (1988, 2000, 2010, and 2021). They assessed the spatial abundance and heterogeneity of vegetation, built-up areas, and bare soil as driving factors using moving window analysis and statistical models.
+
+     \vspace{0.3cm}    
+
+    \item \textbf{Cetin et al. (2024):} "{Determination of Land Surface Temperature and Urban Heat Island Effects with Remote Sensing Capabilities: The Case of Kayseri, Türkiye}" - Investigating UHI evolution (2013-2022) in Kayseri, Türkiye, using Landsat 8/9, this study finds strong negative UHI-NDVI and positive UHI-NDBI correlations \parencite{Cetin_2024}, informing mitigation efforts.
+
+    \textbf{Methodology:} The researchers calculated LST from Landsat imagery and analyzed changes in NDVI and NDBI over the study period. They examined the correlations between LST, UHI, NDVI, and NDBI to understand the interplay between land cover changes, green infrastructure, and temperature variations in Kayseri.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Na \& Xu (2023):} "{Automatic Detection and Dynamic Analysis of Urban Heat Islands Based on Landsat Images}" - This research develops an automated method integrating Getis-Ord-Gi* spatial statistics and NDVI standard deviation for dynamic UHI detection and analysis using Landsat images in Nanjing, China \parencite{Na_2023}.
+
+    \textbf{Methodology:} The researchers used Landsat 5 and Landsat 8 images to calculate Land Surface Temperature (LST). They then applied a method that integrates the Getis-Ord-Gi* spatial autocorrelation analysis with NDVI STD to automatically identify and delineate UHI's spatial extent. The study also analyzed the relationship between urban expansion (both horizontal and vertical) and UHI characteristics.
+
+    \vspace{0.3cm}
+
+    \item \textbf{Han et al. (2022):} "{A Comparative Review on the Mitigation Strategies of Urban Heat Island (UHI): A Pathway for Sustainable Urban Development}" - A literature review compares UHI mitigation strategies (cool materials, vegetation, water bodies, urban geometry), assessing their effectiveness (potential 1.4K-3.74K reduction) across different climate zones \parencite{Han_2022}.
+
+    \textbf{Methodology:} The paper conducts a comparative review of existing literature, examining the mechanisms and effectiveness of different UHI mitigation strategies. It analyzes how factors like building height-to-width ratio and sky view factor can influence the cooling effects of vegetation, water bodies, and cool materials. The review aims to provide theoretical guidance for urban planning and building design to enhance the livability of urban environments and promote sustainable development.
+
+    % Added: Research that uses OSM data with raster
+    \item \textbf{Ridha \& Al-shammari (2025):} "{Monitoring the Urban Heat Island Effect in Baghdad Using Sentinel-3 and OSM Data Integration for Sustainable Urban Planning}" - This study investigates the Urban Heat Island (UHI) phenomenon in Baghdad by utilizing Land Surface Temperature (LST) data from the Sentinel-3 satellite and urban infrastructure data from OpenStreetMap (OSM). It examines UHI changes between 2016 and 2023, focusing on the spatial distribution of UHI and the relationship between urban development and UHI magnitude. The findings indicate a significant increase in UHI intensity over the period, with strong positive correlations observed between building density and road density with UHI intensity, and a moderate negative correlation for green areas \parencite{RidhaAlshammari2025Baghdad}.
+
+    \textbf{Methodology:} The research involves acquiring LST data from Sentinel-3 and urban fabric data (building density, road density, green areas) from OSM. A temporal analysis of UHI changes between 2016 and 2023 is conducted. The study empirically investigates the correlation between OSM-derived urban development indicators and UHI intensity. The results highlight the impact of urban infrastructure development on UHI, aiming to provide policy suggestions for urban planners.
+
+\end{itemize}
+
+
+\subsection{Contribution of This Work}
+
+While previous studies have provided critical insights into UHI detection and mitigation, our project builds upon these foundations in several key ways:
+
+\begin{itemize}
+    % selects the satellite image closest to the hottest meteorological day for each year instead of July every 5 year
+    \item \textbf{Temporal Analysis:} Unlike static UHI mapping approaches, we aim to conduct a multi-year comparison of urban heat islands by selecting, for each year, the satellite imagery that corresponds most closely to the hottest day identified through meteorological records, while also aligning with the temporal availability of satellite overpasses. This ensures that surface temperature anomalies are captured under peak thermal conditions consistently across the ten-year span.
+    \item \textbf{Policy impact:} temporal analysis identifies hotspots for targeted greening.
+    \item \textbf{Integration of Remote Sensing and Deep Learning:} We utilize state-of-the-art deep learning models, such as U-Net and other segmentation architectures, combined with GDAL-based preprocessing techniques to enhance UHI detection accuracy. 
+    \item \textbf{Cloud-based Data Management:} Our methodology includes leveraging cloud storage solutions such as AWS S3 and GitHub for efficient data versioning and scalability.
+    \item \textbf{Potential for Commercialization:} Beyond academic contributions, this project explores opportunities for deploying a UHI detection API or SaaS solution that provides real-time UHI mapping and analysis for urban planners and environmental researchers.
+\end{itemize}
+
+By integrating these innovations, our research not only refines UHI detection methodologies but also proposes a scalable framework for real-world applications in climate resilience and urban development.
+
+\section{Methodology}
+
+\subsection{Data Acquisition}
+The data required for this study will be sourced from a combination of satellite remote sensing platforms and ancillary geospatial datasets:
+\begin{itemize}
+    \item \textbf{Satellite Imagery:}
+        \begin{itemize}
+            \item Landsat 8/9 (OLI/TIRS): Primary source for Land Surface Temperature (LST) derivation and multispectral data for broader land cover context.
+            \item Sentinel-2 (MSI): Primary source for deriving spectral indices indicative of various Land Use/Land Cover (LULC) classes. This includes the Normalized Difference Vegetation Index (NDVI) for vegetation assessment, the Normalized Difference Built-up Index (NDBI) to identify built-up areas, and the Normalized Difference Water Index (NDWI) for water bodies. The high spatial resolution (10-20m) of Sentinel-2 is crucial for detailed LULC mapping.
+            \item MODIS: Utilized for its thermal data to provide broader LST context and potentially for temporal data fusion techniques.
+        \end{itemize}
+    \item \textbf{OpenStreetMap (OSM) Data:} Snapshots for the years 2015 and 2025 will provide vector layers for key urban features, including building footprints, road networks, and designated green spaces (e.g., parks and urban forests).
+    \item \textbf{Auxiliary Data:}
+        \begin{itemize}
+            \item Existing vegetation cover maps for Hamburg (if available and at a suitable resolution) for validation or supplementation.
+            \item Official land-use/land-cover datasets for Hamburg (e.g., from local planning authorities or CORINE Land Cover for broader context) to aid in LULC classification and validation.
+            \item Urban infrastructure datasets beyond OSM, if necessary, to complement the urban fabric characterization.
+            \item Historical meteorological records for Hamburg to identify periods of extreme heat for targeted LST analysis.
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Land Surface Temperature (LST) Derivation}
+Land Surface Temperature (LST) will be a primary input for UHI detection. Our approach leverages data from both Landsat and MODIS satellites, guided by historical meteorological records.
+
+For each year within the 2014-2024 study period, meteorological data from stations in and around Hamburg will be analyzed to identify the hottest summer days, indicative of potential peak UHI conditions. Cloud-free Landsat 8/9 (OLI/TIRS) scenes coinciding with, or proximal to, these identified days will be prioritized. We will utilize Landsat Collection 2 Level-2 Science Products, specifically the Surface Temperature product, which provides LST at a 30-meter resolution (resampled from the 100-meter TIRS bands) and includes atmospheric corrections. The satellite acquisition time (typically around 10:00-10:30 AM local time for Hamburg) will be recorded for each selected scene.
+
+MODIS daily LST products (MOD11A1 - Terra, and MYD11A1 - Aqua, at 1 km resolution) will serve multiple purposes. Firstly, they will be used to corroborate the selection of the hottest days by providing a broader spatio-temporal context of regional temperature patterns. Secondly, given their daily revisit capability, MODIS LST data offers the potential to investigate LST dynamics on days without suitable Landsat coverage.
+
+Consideration will be given to spatio-temporal data fusion techniques, such as the Spatial and Temporal Adaptive Reflectance Fusion Model (STARFM) \parencite{GaoSTARFM2006}, to explore the feasibility of generating higher temporal frequency LST maps at Landsat's spatial resolution by blending MODIS and Landsat data. This would be particularly valuable for creating a more consistent time-series for analysis. However, the implementation of such methods will be subject to further feasibility assessment within the project's scope. Any LST data fusion will involve rigorous validation against available ground truth or reference data. The inherent differences in spatial resolution and acquisition times between Landsat and MODIS will be carefully managed in all comparative and integrated analyses.
+
+\subsubsection{OpenStreetMap Data Processing}
+OpenStreetMap (OSM) vector data for the years 2015 and 2025, encompassing features such as buildings, roads, and green spaces (e.g., parks), will be acquired for Hamburg. To integrate this structural urban information into the U-Net model, which primarily processes raster data, the following steps will be taken:
+
+The primary method will involve the \textbf{rasterization} of these OSM vector layers. Each relevant OSM feature class (buildings, roads, green spaces) will be converted into a separate raster layer with a spatial resolution of 10 meters, aligning with the target resolution of the LST and spectral index data. These rasterized layers will serve as categorical input channels for the U-Net, providing semantic context about the land cover type.
+
+Furthermore, to capture more nuanced urban morphological characteristics, \textbf{feature engineering} from the OSM vector data will be explored. This may include calculating metrics such as:
+\begin{itemize}
+    \item Building density (percentage of area covered by building footprints per 10m grid cell).
+    \item Road density (length of road segments per 10m grid cell).
+    \item Proximity features (e.g., distance from each 10m grid cell to the nearest OSM-defined park or water body).
+    \item Fractional cover of green space within each 10m grid cell.
+\end{itemize}
+These engineered features, once calculated, will also be rasterized to 10m resolution and incorporated as additional input channels to the U-Net model. While advanced deep learning architectures capable of direct vector data ingestion exist (e.g., Graph Neural Networks), the planned U-Net architecture necessitates the conversion of OSM-derived information into a raster format for compatibility with its convolutional layers.
+
+% --- Comment: Added detail on specific LULC indices from Sentinel-2 ---
+The selection of satellite imagery will prioritize cloud-free acquisitions, particularly for LST derivation, corresponding to the hottest identified days within the study period (2014-2024).
+
+\subsection{Data Processing} % Assuming LST determination details will be in a sub-subsection here or linked
+This phase involves preparing the acquired data for model input and analysis.
+\begin{itemize}
+    \item \textbf{Preprocessing:} Raw satellite data (Landsat, Sentinel-2, MODIS) will undergo standard preprocessing steps including radiometric calibration, atmospheric correction (if not already applied in Level-2 products), reprojection to a common coordinate system (e.g., UTM), and resampling to the target spatial resolution of 10 meters. Libraries such as GDAL, Rasterio, and NumPy will be utilized for these tasks.
+    % --- Comment: LST derivation to be detailed in its own subsection as discussed previously ---
+    \item \textbf{LST Derivation:} Land Surface Temperature will be derived as detailed in Section \ref{sec:lst_acquisition_approach}. % Placeholder for cross-referencing the detailed LST approach
+
+    \item \textbf{LULC Mapping and Feature Extraction:}
+        \begin{itemize}
+            \item \textbf{Spectral Indices:} NDVI, NDBI, and NDWI will be calculated from Sentinel-2 imagery to quantify vegetation vigor, built-up areas, and surface water presence, respectively.
+            \item \textbf{LULC Classification:} Beyond spectral indices, a supervised or unsupervised classification (e.g., Random Forest, SVM, or ISODATA) may be performed on Sentinel-2 multispectral bands to generate a thematic LULC map with classes such as dense urban, sparse urban, vegetation (differentiating types if possible), water, and bare soil. This map would provide explicit LULC categories as input to the model. Training and validation data for supervised classification would be derived from visual interpretation of high-resolution imagery, existing LULC maps, and OSM data.
+            \item \textbf{OSM Feature Rasterization:} Vector layers from OSM (buildings, roads, green spaces) will be rasterized to 10m resolution to align with other datasets. This process will create binary or categorical masks representing the presence and type of these urban features.
+            \item \textbf{Derived OSM Features (Optional):} Further features may be engineered from OSM vector data before rasterization, such as building density, road network density, or distance to green spaces within each 10m grid cell, to provide richer contextual information.
+        \end{itemize}
+    % --- Comment: LULC mapping details added ---
+    These processed layers (LST, NDVI, NDBI, NDWI, potentially a thematic LULC map, and rasterized OSM features) will form the multi-channel input arrays for the semantic segmentation model.
+
+    % --- Comment: Semantic segmentation input definition ---
+    \item \textbf{Semantic Segmentation Pipeline:} U-Net will be trained on multi-channel input arrays combining [LST, NDVI, OSM masks]. Semantic masks will define UHI zones, vegetation coverage, and built structures.
+
+    \item \textbf{Temporal Analysis:} A ten-year comparison (2015–2025) will be performed by selecting satellite scenes corresponding to the hottest meteorological days, aligned with satellite overpass times, to evaluate spatiotemporal UHI changes.
+
+    % --- Comment: Added forecasting section ---
+    \item \textbf{Forecasting:} Pixel-level UHI intensity trends from historical data will be used to train models such as ARIMA, Prophet, TCN, or LSTM to forecast UHI patterns in 2030.
+
+    % --- Comment: Real-time inference strategy ---
+    \item \textbf{Real-Time Detection:} Trained models will be deployed for inference in near-real-time using cloud platforms (Google Earth Engine or AWS) integrated with Google Colab.
+
+    \item \textbf{Application:} The resulting UHI maps, time-series visualizations, and predictions will support urban planning decisions, especially in green space management and climate adaptation strategies.
+\end{itemize}
+
+\section{Expected Outcomes}
+\begin{itemize}
+    \item High-resolution UHI maps for Hamburg and other urban areas
+    \item Quantitative assessment of temperature variations and their relation to vegetation and land use
+    \item Automated deep learning-based model for real-time UHI detection
+\end{itemize}
+
+\section{Application \& Economic Potential}
+
+The actionable intelligence derived from this project can serve as a basis for public-private partnerships and consultancy services. By offering detailed assessments, the project could unlock new revenue streams in smart city development and sustainability consulting.
+
+\subsection{Urban Planning \& Policy Development}
+\begin{itemize}
+    \item Identification of critical areas for increasing green spaces
+    \item Supporting sustainable urban development strategies
+\end{itemize}
+
+\subsection{Commercialization Strategy}
+\begin{itemize}
+    \item \textbf{API Development:} Deploying a real-time UHI detection API for urban planners
+    \item \textbf{SaaS Model:} Offering heat risk assessments for insurance companies, real estate developers, and municipalities
+    \item \textbf{Consulting Services:} Partnering with local governments and environmental organizations for climate adaptation strategies
+\end{itemize}
+
+\section{Publication \& Future Research}
+\subsection{Potential Journals}
+\begin{itemize}
+    \item \textbf{Journals:} Remote Sensing of Environment, Urban Climate, IEEE Transactions on Geoscience and Remote Sensing
+\end{itemize}
+
+\subsection{Future Enhancements}
+\begin{itemize}
+    \item Alternative deep segmentation architectures (e.g., DeepLabv3+, SegFormer) will be benchmarked for performance comparison.
+    \item Extending the study to multiple cities and integrating additional environmental variables
+\end{itemize}
+
+\section{Workflow \& Implementation Plan}
+\subsection{Version Control \& Data Management}
+\begin{itemize}
+     \item \textbf{Platform}: Google Colab (Jupyter notebooks with Python runtime).
+    \item \textbf{Version Control:} GitHub repository will be used for commiting each completed notebook, models, and documentation. 
+    \item \textbf{Data Storage:} Raw and processed raster/vector datasets on AWS S3 (or Google Drive via \texttt{gdown}); use \texttt{boto3} (or \texttt{PyDrive}) in Colab.
+\end{itemize}
+
+\clearpage
+
+\subsection{GitHub Repository Structure}
+
+The project will be version-controlled using Git and hosted on GitHub. The repository will be structured as follows:
+
+\begin{figure}[!htbp]
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\footnotesize, backgroundcolor=\color{gray!10}, frame=single, escapeinside={(*}{*)}, literate={├}{|}1 {─}{-}1 {└}{+}1 {│}{!}1]
+Urban-Heat-Island-Detection/
+|
+|-- notebooks/
+|   |-- 01_data_acquisition_geemap.ipynb      # GEE + geemap 
+|   |-- 02_osm_preprocessing.ipynb            # Download & rasterize OSM via osmnx
+|   |-- 03_data_processing.ipynb              # Compute LST, NDVI; merge channels
+|   |-- 04_model_training.ipynb               # U-Net / DeepLabv3+ training pipeline
+|   |-- 05_time_series_forecasting.ipynb      # ARIMA/Prophet or TCN/LSTM for 2030 UHI
+|   |-- 06_real_time_inference.ipynb          # Real-time UHI detection on new imagery
+|   +-- 07_visualization_deploy.ipynb         # Mapbox + slider for interactive map
+|
+|-- models/                # model architectures fonksiyonlar
+|   |-- unet.py
+|   |-- deeplabv3.py
+|   +-- utils.py
+|
+|-- src/
+|   |-- data_loader.py
+|   |-- model_utils.py       # (optional: move model code here instead)
+|   +-- viz.py
+|
+|-- latex/
+|   |-- proposal_v3.tex      # LaTeX 
+|   +-- sections/
+|       +-- workflow_plan.tex  
+        +-- satellite_comparison_UHI.tex  
+|
+|-- requirements.txt
++-- README.md
+\end{lstlisting}
+\caption{GitHub repository structure for the project}
+\label{fig:repo_structure}
+\end{figure}
+
+
+\vspace{0.5cm}
+\textbf{Key Considerations:}
+\begin{itemize}
+  \item \textbf{GPU Access:} Use Google Colab Pro (or Pro +) for more reliable, longer-running GPU sessions and faster training times.
+  \item \textbf{Cloud Storage Costs:} Monitor AWS S3 (or Google Drive) egress and storage fees—consider lifecycle rules or AWS Free Tier quotas.
+  \item \textbf{Model Code Organization:} Keep model architectures and utilities in a dedicated \texttt{models/} or \texttt{src/models/} folder, imported into the training notebook to improve modularity and testing.
+  \item \textbf{Map Visualization:}
+    \begin{itemize}[noitemsep]
+      \item Mapbox requires an access token and may incur usage charges; manage tokens securely (e.g., via GitHub Secrets).
+      \item Alternatives:
+        \begin{itemize}[noitemsep]
+          \item \textbf{CesiumJS} – open-source 3D globes and maps.
+          \item \textbf{Kepler.gl} – high-performance WebGL tabular geo-visualizations.
+          \item \textbf{ipyleaflet} + \texttt{ipywidgets} – interactive map.
+        \end{itemize}
+    \end{itemize}
+  \item \textbf{Real-Time Deployment:} If moving beyond Colab, consider AWS Lambda / GEE Apps with GPU-backed instances (AWS EC2 G4/G5) for inference, balancing latency vs. cost.
+  \end{itemize}
+
+\clearpage
+
+\subsection{Timeline (Estimated 2.5-Month Plan)}
+
+\begin{table}[!htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|c|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Phase} & \textbf{Tasks} & \textbf{Weeks} & \textbf{Deliverables} \\
+\hline
+1. Data Acquisition &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Use GEE + geemap to query Landsat 8/9 \& Sentinel-2 for Hamburg (hottest days 2015 \& 2025).
+  \item Export images to AWS S3 or Drive.
+  \item Commit.
+\end{itemize}
+& 1--2
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item GEE script
+  \item Exported satellite images
+  \item \path{01_data_acquisition_geemap.ipynb}
+\end{itemize} \\
+\hline
+2. OSM Preprocessing &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Download OSM 2015/2025 via \texttt{osmnx}.
+  \item Rasterize buildings, roads, green spaces at 10\,m.
+  \item Commit.
+\end{itemize}
+& 2
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Downloaded OSM data
+  \item Rasterized OSM masks (buildings, roads, green spaces)
+  \item \path{02_osm_preprocessing.ipynb}
+\end{itemize} \\
+\hline
+3. Data Processing &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Compute LST, NDVI; merge with OSM masks into multi-channel arrays.
+  \item Save patches and commit.
+\end{itemize}
+& 3
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item LST and NDVI layers
+  \item Merged multi-channel data patches
+  \item \path{03_data_processing.ipynb}
+\end{itemize} \\
+\hline
+4. Model Training &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Train U-Net (and alternatives) on merged dataset, target $\ge$90\% accuracy.
+  \item Save weights/logs; commit.
+\end{itemize}
+& 4--5
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Trained model weights
+  \item Training logs/history
+  \item \path{04_model_training.ipynb}
+\end{itemize} \\
+\hline
+5. Temporal Forecasting &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Aggregate annual UHI per pixel (2015--2025).
+  \item Forecast 2030 via ARIMA/Prophet and TCN/LSTM.
+  \item Commit.
+\end{itemize}
+& 6--7
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Aggregated UHI data (2015-2025)
+  \item 2030 UHI forecast results
+  \item \path{05_time_series_forecasting.ipynb}
+\end{itemize} \\
+\hline
+6. Real-Time Inference &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Load model; infer on new GEE imagery.
+  \item Commit.
+\end{itemize}
+& 8
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Inference script
+  \item Real-time UHI inference results
+  \item \path{06_real_time_inference.ipynb}
+\end{itemize} \\
+\hline
+7. Visualization \& Deployment &
+\begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Build interactive Mapbox/ipywidgets slider map for 2015/2025/2030.
+  \item Commit.
+\end{itemize}
+& 9--10
+& \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+  \item Interactive map
+  \item Deployment package/code
+  \item \path{07_visualization_deploy.ipynb}
+\end{itemize} \\
+\hline
+\end{tabularx}
+\caption{Workflow steps, tasks, timeline, and deliverables for the UHI project.}
+\label{tab:uhi_workflow_new}
+\end{table}
+
+\clearpage
+
+\printbibliography 
+\end{document}
