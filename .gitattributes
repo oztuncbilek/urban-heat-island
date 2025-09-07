@@ -1,1 +1,10 @@
 figures/*.html linguist-vendored
+
+
+*.py linguist-language=Python
+*.html linguist-language=HTML
+*.json linguist-language=JSON
+*.md linguist-language=Markdown
+
+outputs/* linguist-vendored
+notebooks/* linguist-vendored
