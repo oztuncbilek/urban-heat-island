@@ -1,5 +1,5 @@
 maps/*.html linguist-vendored
-
+latex/*.tex linguist-vendored
 
 *.py linguist-language=Python
 *.html linguist-language=HTML
