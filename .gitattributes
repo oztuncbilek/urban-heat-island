@@ -1,4 +1,4 @@
-figures/*.html linguist-vendored
+maps/*.html linguist-vendored
 
 
 *.py linguist-language=Python
