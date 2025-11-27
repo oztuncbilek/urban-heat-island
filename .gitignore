@@ -3,3 +3,4 @@ __pycache__/
 .env
 # MacOS folder
 .DS_Store
+data/
