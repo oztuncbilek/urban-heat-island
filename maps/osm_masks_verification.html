@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_71b90afa8ff5518b2fc5031078fd5609 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_71b90afa8ff5518b2fc5031078fd5609" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_71b90afa8ff5518b2fc5031078fd5609 = L.map(
+                "map_71b90afa8ff5518b2fc5031078fd5609",
+                {
+                    center: [53.5511, 9.9937],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_93658ed5c0e312269732d873885ce1e6 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_93658ed5c0e312269732d873885ce1e6.addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+        
+    
+            var tile_layer_86c1bc2296ee088e663806c02882b478 = L.tileLayer(
+                "http://127.0.0.1:58540/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2FUsers%2Fozantuncbilek%2FDocuments%2FProjects%2FUHI+Detection+and+Analysis%2Furban-heat-island%2Fdata%2Fraw%2Fosm%2Fstatic_building.tif",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "OSM Data",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 0.6,
+  "bounds": [[53.399993, 9.699919], [53.700389, 10.300083]],
+  "palette": "#ff0000",
+}
+
+            );
+        
+    
+            tile_layer_86c1bc2296ee088e663806c02882b478.addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+        
+    
+            var tile_layer_277b46865591a050cfe58b88810c0c2a = L.tileLayer(
+                "http://127.0.0.1:58540/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2FUsers%2Fozantuncbilek%2FDocuments%2FProjects%2FUHI+Detection+and+Analysis%2Furban-heat-island%2Fdata%2Fraw%2Fosm%2Fstatic_highway.tif",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "OSM Data",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 0.6,
+  "bounds": [[53.399993, 9.699919], [53.700389, 10.300083]],
+  "palette": "#ffa500",
+}
+
+            );
+        
+    
+            tile_layer_277b46865591a050cfe58b88810c0c2a.addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+        
+    
+            var tile_layer_03060f3de6fbaf825dddd869d6c942ba = L.tileLayer(
+                "http://127.0.0.1:58540/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2FUsers%2Fozantuncbilek%2FDocuments%2FProjects%2FUHI+Detection+and+Analysis%2Furban-heat-island%2Fdata%2Fraw%2Fosm%2Fstatic_natural.tif",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "OSM Data",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 0.6,
+  "bounds": [[53.399993, 9.699919], [53.700389, 10.300083]],
+  "palette": "#0000ff",
+}
+
+            );
+        
+    
+            tile_layer_03060f3de6fbaf825dddd869d6c942ba.addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+        
+    
+            var tile_layer_691e2dedc68c195132786ac1b0200b94 = L.tileLayer(
+                "http://127.0.0.1:58540/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2FUsers%2Fozantuncbilek%2FDocuments%2FProjects%2FUHI+Detection+and+Analysis%2Furban-heat-island%2Fdata%2Fraw%2Fosm%2Fstatic_waterway.tif",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "OSM Data",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 0.6,
+  "bounds": [[53.399993, 9.699919], [53.700389, 10.300083]],
+  "palette": "#00ffff",
+}
+
+            );
+        
+    
+            tile_layer_691e2dedc68c195132786ac1b0200b94.addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+        
+    
+            var layer_control_13ea20075a79d86bcda4d9ad39f39ba9_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_93658ed5c0e312269732d873885ce1e6,
+                    "static_building" : tile_layer_86c1bc2296ee088e663806c02882b478,
+                    "static_highway" : tile_layer_277b46865591a050cfe58b88810c0c2a,
+                    "static_natural" : tile_layer_03060f3de6fbaf825dddd869d6c942ba,
+                    "static_waterway" : tile_layer_691e2dedc68c195132786ac1b0200b94,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_13ea20075a79d86bcda4d9ad39f39ba9 = L.control.layers(
+                layer_control_13ea20075a79d86bcda4d9ad39f39ba9_layers.base_layers,
+                layer_control_13ea20075a79d86bcda4d9ad39f39ba9_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_71b90afa8ff5518b2fc5031078fd5609);
+
+        
+</script>
+</html>

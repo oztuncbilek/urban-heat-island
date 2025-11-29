@@ -4,3 +4,5 @@ __pycache__/
 # MacOS folder
 .DS_Store
 data/
+cache/
+notebooks/cache/
