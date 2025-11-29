@@ -67,21 +67,6 @@ The project employs a multi-faceted approach:
 * **Development Environment:** Google Colab (Jupyter notebooks) 
 * **Visualization:** Mapbox, ipywidgets, potentially CesiumJS, Kepler.gl, ipyleaflet
 
-## Getting Started
-
-To be filled ...
-## Timeline Overview
-
-The project is planned over approximately 2.5 months, divided into the following phases:
-1.  **Data Acquisition** (Weeks 1-2) 
-2.  **OSM Preprocessing** (Week 2) 
-3.  **Data Processing** (Week 3) 
-4.  **Model Training** (Weeks 4-5) 
-5.  **Temporal Forecasting** (Weeks 6-7) 
-6.  **Real-Time Inference** (Week 8) 
-7.  **Visualization & Deployment** (Weeks 9-10) 
-
-
 ## Future Enhancements
 
 * Benchmark alternative deep segmentation architectures (e.g., DeepLabv3+, SegFormer). 
