@@ -7,3 +7,5 @@ cache/
 notebooks/cache/
 __pycache__/
 src/__pycache__/
+# Ignore large interactive maps
+maps/*.html
