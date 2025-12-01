@@ -1,1 +1,30 @@
-e
+# --- Core Data Science & Utilities ---
+numpy
+pandas
+matplotlib
+tqdm
+requests
+jupyter
+
+# --- Geospatial Processing ---
+earthengine-api
+geemap
+geedim
+rasterio
+osmnx
+geopandas
+shapely
+xarray
+rioxarray
+localtileserver
+folium
+
+# --- Image Processing ---
+# using headless version to avoid X11 errors in Docker/Cloud
+opencv-python-headless 
+
+# --- Deep Learning (PyTorch) ---
+# Note: For specific CUDA/MPS versions, manual install might be needed,
+# but this pulls the latest stable version.
+torch
+torchvision
