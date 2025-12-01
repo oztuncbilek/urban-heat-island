@@ -5,6 +5,9 @@
 ![Project Preview](maps/preview_2023.png)
 *(AI-Driven Thermal Sharpening: Transforming coarse satellite data into precise building-level risk maps)*
 
+![UHI Evolution Timelapse](maps/uhi_evolution.gif)
+*(Time-Lapse: 10-year evolution of Urban Heat Island risk in Hamburg, predicted by U-Net)*
+
 ## Project Overview
 
 This project focuses on the detection and analysis of Urban Heat Islands (UHIs) in Hamburg, Germany. UHIs represent a critical environmental challenge where metropolitan areas experience significantly higher temperatures than surrounding rural regions.
