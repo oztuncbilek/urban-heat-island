@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # --- HYPERPARAMETERS ---
     LEARNING_RATE = 1e-4
     BATCH_SIZE = 8       
-    NUM_EPOCHS = 10      # Reduced to 10 for testing
+    NUM_EPOCHS = 50      
     CROP_SIZE = 256
     
     # --- PATHS ---

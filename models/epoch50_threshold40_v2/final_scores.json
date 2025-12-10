@@ -1,0 +1,7 @@
+{
+    "IoU": 0.5773,
+    "F1_Score": 0.732,
+    "Precision": 0.729,
+    "Recall": 0.735,
+    "Accuracy": 0.8388
+}

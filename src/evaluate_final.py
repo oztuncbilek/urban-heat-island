@@ -12,7 +12,7 @@ from dataset import UHIDataset
 # --- CONFIGURATION ---
 BATCH_SIZE = 8
 CROP_SIZE = 256
-THRESHOLD = 0.5  # Threshold to convert probability to binary mask
+THRESHOLD = 0.4  # Threshold to convert probability to binary mask
 
 # --- DEVICE SETUP ---
 if torch.backends.mps.is_available():
